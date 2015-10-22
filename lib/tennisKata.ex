@@ -1,2 +1,0 @@
-defmodule TennisKata do
-end
