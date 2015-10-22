@@ -13,13 +13,14 @@ defmodule Game do
 
   defp next_score(player, [player_one_score, player_two_score]) do
     case player do
-      :player_one ->  add_point([player_one_score, player_two_score])
-      :player_two ->  Enum.reverse(add_point([player_two_score, player_one_score]))               
+      :player_one -> add_point([player_one_score, player_two_score])
+      :player_two -> Enum.reverse(add_point([player_two_score, player_one_score]))               
     end
   end
 
   defp add_point([winner_score, loser_score]) do
     case [winner_score, loser_score] do
+      [:advantage, _]  -> [:win, :lose]
       [40, :advantage] -> [40, 40]
       [40, 40]         -> [:advantage, 40] 
       [40, _]          -> [:win, :lose]
@@ -143,6 +144,20 @@ defmodule TennisKataTest do
     send game, :player_one
     send game, {:get_score, self}
     assert_receive {:score, [40, 40]}
+  end
+
+  test "a player win after an advantage" do
+    game = spawn_link(Game, :start, [])
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_two
+    send game, {:get_score, self}
+    assert_receive {:score, [:lose, :win]}
   end
 
 end
