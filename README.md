@@ -1,19 +1,7 @@
-# TennisKata
+# TennisKata with Elixir
 
-**TODO: Add description**
+## Run test
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add tennisKata to your list of dependencies in `mix.exs`:
-
-        def deps do
-          [{:tennisKata, "~> 0.0.1"}]
-        end
-
-  2. Ensure tennisKata is started before your application:
-
-        def application do
-          [applications: [:tennisKata]]
-        end
+```
+mix test
+```
