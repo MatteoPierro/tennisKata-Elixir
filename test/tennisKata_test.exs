@@ -12,7 +12,10 @@ defmodule Game do
   end
 
   defp next_player_score(current_player_score) do
-    current_player_score + 15
+    case current_player_score do
+      30 -> 40
+      _  -> current_player_score + 15
+    end
   end
 end
 
@@ -61,5 +64,14 @@ defmodule TennisKataTest do
     send game, :player_two
     send game, {:get_score, self}
     assert_receive {:score, [0, 30]}
+  end
+
+  test "a player scored three point" do
+    game = spawn_link(Game, :start, [])
+    send game, :player_one
+    send game, :player_one
+    send game, :player_one
+    send game, {:get_score, self}
+    assert_receive {:score, [40, 0]}
   end
 end
