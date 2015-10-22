@@ -20,10 +20,11 @@ defmodule Game do
 
   defp add_point([winner_score, loser_score]) do
     case [winner_score, loser_score] do
-        [40, 40]-> [:advantage, 40] 
-        [40, _] -> [:win, :lose]
-        [30, _] -> [40, loser_score]
-          _     -> [winner_score + 15, loser_score]
+      [40, :advantage] -> [40, 40]
+      [40, 40]         -> [:advantage, 40] 
+      [40, _]          -> [:win, :lose]
+      [30, _]          -> [40, loser_score]
+        _              -> [winner_score + 15, loser_score]
     end
   end
 end
@@ -128,6 +129,20 @@ defmodule TennisKataTest do
     send game, :player_two
     send game, {:get_score, self}
     assert_receive {:score, [40, :advantage]}
+  end
+
+  test "tie score after advantage" do
+    game = spawn_link(Game, :start, [])
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_one
+    send game, :player_two
+    send game, :player_one
+    send game, {:get_score, self}
+    assert_receive {:score, [40, 40]}
   end
 
 end
